@@ -1,0 +1,107 @@
+name: Convert Keras model to TFJS
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'public/models/impact_model_keras/model.h5'
+  workflow_dispatch:
+
+concurrency:
+  group: tfjs-convert-deploy-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  convert:
+    outputs:
+      tfjs_changed: ${{ steps.detect_tfjs.outputs.changed }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install converter dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install tensorflow==2.15.0 tensorflowjs==4.22.0 tensorflow-decision-forests==1.8.1 tf-keras==2.15.1 h5py
+
+      - name: Convert Keras H5 to TFJS
+        run: |
+          mkdir -p public/models/impact_model
+          tensorflowjs_converter --input_format=keras public/models/impact_model_keras/model.h5 public/models/impact_model
+          # Copy metadata/metrics/calibration if present
+          for f in metadata.json metrics.json calibration.json; do
+            if [ -f public/models/impact_model_keras/$f ]; then
+              cp public/models/impact_model_keras/$f public/models/impact_model/$f
+            fi
+          done
+
+      - name: Detect TFJS changes
+        id: detect_tfjs
+        shell: bash
+        run: |
+          if git status --porcelain | grep -q "public/models/impact_model"; then
+            echo "changed=true" >> $GITHUB_OUTPUT
+          else
+            echo "changed=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Upload TFJS model as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: tfjs-model
+          path: public/models/impact_model
+
+      - name: Commit and push TFJS model
+        run: |
+          if git status --porcelain | grep -q "public/models/impact_model"; then
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git add public/models/impact_model
+            git commit -m "CI: Convert TFJS model from model.h5 [skip ci]"
+            git push
+          else
+            echo "No changes to commit."
+          fi
+
+  deploy:
+    needs: convert
+    if: needs.convert.outputs.tfjs_changed == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository (latest main)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Ensure latest main (including convert commit)
+        run: |
+          git fetch origin main
+          git checkout -B main origin/main
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build site
+        run: npm run build
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+          force_orphan: true

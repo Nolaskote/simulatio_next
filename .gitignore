@@ -1,0 +1,19 @@
+﻿# Node/Python/Build
+node_modules/
+dist/
+.DS_Store
+.vscode/
+
+# Python envs
+.venv/
+venv/
+.env
+
+# Heavy/generated data
+data/processed/
+public/models/
+public/tfwasm/
+
+# Caches
+.cache/
+.vite/

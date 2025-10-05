@@ -1,0 +1,3 @@
+# Override LFS on gh-pages: ensure data files are committed as text
+*.json -filter -merge -diff text
+*.csv -filter -merge -diff text

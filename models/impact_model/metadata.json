@@ -1,0 +1,14 @@
+{
+  "targetType": "severity",
+  "modelType": "deep",
+  "normalizeInModel": true,
+  "featureOrder": [
+    "moidAU",
+    "missDistanceKm",
+    "relativeVelocityKmS",
+    "diameterKm",
+    "hMagnitude",
+    "inclinationDeg",
+    "daysToCloseApproach"
+  ]
+}

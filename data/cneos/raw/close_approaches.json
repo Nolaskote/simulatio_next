@@ -1,0 +1,17 @@
+{
+  "fields": [
+    "des",
+    "cd",
+    "dist",
+    "dist_min",
+    "v_rel",
+    "h"
+  ],
+  "count": 0,
+  "data": [],
+  "meta": {
+    "dateMin": "2000-01-01",
+    "dateMax": "2100-12-31",
+    "fetchedAt": "2025-10-02T00:23:36.232Z"
+  }
+}
