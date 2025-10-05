@@ -451,16 +451,16 @@ export default function SolarSystem({
             pointSize={pointSize}
             // maintain constant pixel size for points
             constantScreenSize={true}
-            pointSizePx={4}
+            pointSizePx={3}
             autoScaleWithDistance={false}
-            minPointSizePx={4}
-            maxPointSizePx={4}
+            minPointSizePx={3}
+            maxPointSizePx={3}
             // improve picking at long distances
             pickingRadiusWorld={0.7}
             selectedNeoId={selectedNeo?.id}
             highlightColor="#ffd700"
             glowEnabled={asteroidGlowEnabled}
-            glowSizePx={8}
+            glowSizePx={6}
             glowOpacity={0.12}
           />
         </Suspense>
