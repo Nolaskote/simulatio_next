@@ -449,12 +449,12 @@ export default function SolarSystem({
             onClick={handleAsteroidClick}
             updateHz={asteroidUpdateHz}
             pointSize={pointSize}
-            // maintain constant pixel size for points
+            // maintain constant pixel size for points, driven by UI
             constantScreenSize={true}
-            pointSizePx={3}
+            pointSizePx={uiPointSizePx}
             autoScaleWithDistance={false}
-            minPointSizePx={3}
-            maxPointSizePx={3}
+            minPointSizePx={uiPointSizePx}
+            maxPointSizePx={uiPointSizePx}
             // improve picking at long distances
             pickingRadiusWorld={0.7}
             selectedNeoId={selectedNeo?.id}

@@ -92,6 +92,8 @@ export default function EyesOnAsteroids() {
   const [hoveredAsteroid, setHoveredAsteroid] = useState<NEOData | null>(null);
   // Toggle de brillo/halo alrededor (planetas y asteroides)
   const [haloEnabled, setHaloEnabled] = useState(false);
+  // UI-controlled asteroid size in pixels (2..8), default 3px
+  const [uiPointSizePx, setUiPointSizePx] = useState<number>(3);
   // Iluminación fija, sin modificador (ahora controlada desde el sistema con un valor por defecto)
   // Parámetros de rendimiento fijos (mantenidos en SolarSystem): 60 Hz, tamaño 2.0
   const now = useMemo(() => new Date(), []);
@@ -205,7 +207,7 @@ export default function EyesOnAsteroids() {
           haloEnabled={haloEnabled}
           bgEnabled={bgEnabled}
           uiLightIntensity={2.0}
-          uiPointSizePx={2}
+          uiPointSizePx={uiPointSizePx}
           updateHz={60}
           pointSize={2.0}
           rateDaysPerSecond={currentSpeed.daysPerSec}
@@ -221,7 +223,7 @@ export default function EyesOnAsteroids() {
 
       {/* Panel combinado: Estadísticas + Controles */}
       <StatsAndControls
-        stats={stats}
+    stats={stats}
         showAsteroids={showAsteroids}
         setShowAsteroids={(v: boolean) => { setShowAsteroids(v); if (!v) setSelectedAsteroid(null); }}
         showOrbits={showOrbits}
@@ -230,6 +232,8 @@ export default function EyesOnAsteroids() {
     setBgEnabled={handleSetBgEnabled}
         haloEnabled={haloEnabled}
         setHaloEnabled={setHaloEnabled}
+    pointSizePx={uiPointSizePx}
+    setPointSizePx={setUiPointSizePx}
   onOpenPredictor={() => { setShowPredictor(true); setTimeState(s => ({ ...s, isPlaying: false })); }}
         visible={showLeftPanel}
         onRequestHide={() => setShowLeftPanel(false)}

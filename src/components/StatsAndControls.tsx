@@ -11,6 +11,8 @@ export default function StatsAndControls({
   bgEnabled,
   setBgEnabled,
   onOpenPredictor,
+  pointSizePx,
+  setPointSizePx,
   visible = true,
   onRequestHide,
 }: {
@@ -24,6 +26,8 @@ export default function StatsAndControls({
   bgEnabled: boolean;
   setBgEnabled: (v: boolean) => void;
   onOpenPredictor?: () => void;
+  pointSizePx: number;
+  setPointSizePx: (v: number) => void;
   visible?: boolean;
   onRequestHide?: () => void;
 }) {
@@ -41,10 +45,21 @@ export default function StatsAndControls({
         <p className="stat-line">PHA: <strong className="pha">{stats.phas.toLocaleString()}</strong></p>
         <p className="stat-line">NEO: <strong className="neo">{stats.neosOnly.toLocaleString()}</strong></p>
         <div style={{ marginTop: 10 }}>
-          <button className="btn btn--accent" onClick={onOpenPredictor}>
-            <i className="fa-solid fa-meteor" style={{ marginRight: 6 }} />
-            Predict Impacts
-          </button>
+          <label htmlFor="size-slider" style={{ display: 'block', marginBottom: 8 }}>
+            <i className="fa-solid fa-circle-dot" style={{ marginRight: 6 }} />
+            Asteroid size: <strong>{pointSizePx}px</strong>
+          </label>
+          <input
+            id="size-slider"
+            type="range"
+            min={2}
+            max={8}
+            step={1}
+            value={pointSizePx}
+            onChange={(e) => setPointSizePx(parseInt(e.target.value, 10))}
+            style={{ width: '100%' }}
+            aria-label="Asteroid size in pixels"
+          />
         </div>
         <div className="separator" />
       </section>
