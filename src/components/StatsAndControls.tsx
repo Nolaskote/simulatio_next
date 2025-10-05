@@ -47,16 +47,21 @@ export default function StatsAndControls({
         <div style={{ marginTop: 10 }}>
           <label htmlFor="size-slider" style={{ display: 'block', marginBottom: 8 }}>
             <i className="fa-solid fa-circle-dot" style={{ marginRight: 6 }} />
-            Asteroid size: <strong>{pointSizePx}px</strong>
+            Asteroid size: <strong>{pointSizePx >= 10 ? '10' : pointSizePx.toFixed(2)}px</strong>
           </label>
           <input
             id="size-slider"
             type="range"
-            min={1}
+            min={1.01}
             max={10}
-            step={1}
+            step={0.01}
             value={pointSizePx}
-            onChange={(e) => setPointSizePx(parseInt(e.target.value, 10))}
+            onChange={(e) => {
+              const raw = parseFloat(e.target.value);
+              const clamped = Math.min(10, Math.max(1.01, Number.isFinite(raw) ? raw : 3));
+              const rounded = Math.round(clamped * 100) / 100;
+              setPointSizePx(rounded);
+            }}
             className="size-slider"
             style={{ width: '100%' }}
             aria-label="Asteroid size in pixels"

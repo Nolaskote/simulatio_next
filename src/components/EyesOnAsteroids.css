@@ -61,8 +61,8 @@
 .dir-label { font-size: 12px; color: #bbb; }
 
 /* Panels */
-.panel { position: absolute; top: 20px; background: rgba(0,0,0,0.8); color: #fff; padding: 16px; border-radius: 10px; font-family: Arial, sans-serif; font-size: 14px; max-width: 320px; }
-.panel { position: absolute; top: 20px; background: linear-gradient(180deg, rgba(6,12,20,0.72), rgba(4,10,18,0.78)); color: #fff; padding: 16px; border-radius: 14px; font-family: 'Inter', Arial, sans-serif; font-size: 14px; max-width: 340px; border: 1px solid rgba(0,200,255,0.24); box-shadow: 0 12px 28px rgba(0,0,0,0.6), inset 0 0 26px rgba(0,180,255,0.08); backdrop-filter: blur(10px) saturate(120%); }
+.panel { position: absolute; top: 0; background: rgba(0,0,0,0.8); color: #fff; padding: 16px; border-radius: 10px; font-family: Arial, sans-serif; font-size: 14px; max-width: 320px; }
+.panel { position: absolute; top: 0; background: linear-gradient(180deg, rgba(6,12,20,0.72), rgba(4,10,18,0.78)); color: #fff; padding: 16px; border-radius: 14px; font-family: 'Inter', Arial, sans-serif; font-size: 14px; max-width: 340px; border: 1px solid rgba(0,200,255,0.24); box-shadow: 0 12px 28px rgba(0,0,0,0.6), inset 0 0 26px rgba(0,180,255,0.08); backdrop-filter: blur(10px) saturate(120%); }
 .panel--left { left: 20px; }
 .panel.is-hidden { opacity: 0; transform: translateY(-8px); pointer-events: none; }
 .panel.is-visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
@@ -136,15 +136,15 @@
 
 /* Barra de toggles superior derecha */
 /* Botones para revelar cuando están ocultos */
-.reveal-btn { position: absolute; z-index: 10; background: rgba(0,0,0,0.75); color: #fff; border: 1px solid rgba(255,255,255,0.25); border-radius: 8px; padding: 6px 10px; cursor: pointer; font-size: 13px; }
+.reveal-btn { position: absolute; z-index: 30; background: rgba(0,0,0,0.75); color: #fff; border: 1px solid rgba(255,255,255,0.25); border-radius: 8px; padding: 6px 10px; cursor: pointer; font-size: 13px; }
 .reveal-btn:hover { background: rgba(0,0,0,0.85); border-color: rgba(255,255,255,0.45); }
-.reveal-btn--left { top: 20px; left: 20px; }
+.reveal-btn--left { top: 0; left: 20px; }
 .reveal-btn--bottom { bottom: 20px; left: 50%; transform: translateX(-50%); }
 
 /* Top-right controls: search + info button */
 .top-right-controls {
 	position: absolute;
-	top: 16px;
+	top: 0;
 	right: 16px;
 	display: flex;
 	gap: 8px;
@@ -193,9 +193,28 @@
 /* Do not show tooltip when panel is open */
 .info-btn[data-open="true"]::after { display: none !important; }
 
+/* Reduce search sizing in the top-right header zone */
+.top-right-controls .neo-search.neo-search--compact { min-width: 170px; }
+.top-right-controls .neo-search__inputWrap { padding: 6px 10px; }
+.top-right-controls .neo-search__input { font-size: 12px; }
+
+/* On narrower viewports, shrink even more so the Show Panel button isn't covered */
+@media (max-width: 900px) {
+	.top-right-controls .neo-search.neo-search--compact { min-width: 150px; }
+}
+
+/* On very small viewports, eliminate the vertical gap: stick both to the top with minimal safe spacing */
+@media (max-width: 480px) {
+	.top-right-controls { top: 0; }
+	.panel { top: 0; }
+	.reveal-btn--left { top: 0; }
+	/* Allow the search to shrink further so it doesn't push down the left panel visually */
+	.top-right-controls .neo-search.neo-search--compact { min-width: 130px; }
+}
+
 /* SearchBox styles (compact) */
-.neo-search { position: relative; min-width: 260px; }
-.neo-search.neo-search--compact { min-width: 220px; }
+.neo-search { position: relative; min-width: 220px; }
+.neo-search.neo-search--compact { min-width: 180px; }
 .neo-search__inputWrap { display: flex; align-items: center; background: rgba(0,0,0,0.7); border: 1px solid rgba(255,255,255,0.25); border-radius: 8px; padding: 4px 8px; }
 .neo-search__icon { color: #bbb; margin-right: 6px; }
 .neo-search__input { background: transparent; color: #fff; border: none; outline: none; width: 100%; font-size: 13px; }

@@ -92,16 +92,25 @@ export default function EyesOnAsteroids() {
   const [hoveredAsteroid, setHoveredAsteroid] = useState<NEOData | null>(null);
   // Toggle de brillo/halo alrededor (planetas y asteroides)
   const [haloEnabled, setHaloEnabled] = useState(false);
-  // UI-controlled asteroid size in pixels (1..10), default 3px; persisted
+  // UI-controlled asteroid size in pixels (1.01..10), default 3.00px; persisted with 2 decimals
   const [uiPointSizePx, setUiPointSizePx] = useState<number>(() => {
     try {
       const raw = typeof window !== 'undefined' ? window.localStorage.getItem('uiPointSizePx') : null;
-      const n = raw ? parseInt(raw, 10) : 3;
-      return Number.isFinite(n) ? Math.min(10, Math.max(1, n)) : 3;
+      const n = raw ? parseFloat(raw) : 3;
+      let v = Number.isFinite(n) ? Math.min(10, Math.max(1.01, n)) : 3;
+      // Migration: very tiny sizes (<2px) made points nearly invisible. Bump to 3px once.
+      if (v < 2) {
+        v = 3;
+        try { window.localStorage.setItem('uiPointSizePx', '3'); } catch {}
+      }
+      return Math.round(v * 100) / 100;
     } catch { return 3; }
   });
   useEffect(() => {
-    try { window.localStorage.setItem('uiPointSizePx', String(uiPointSizePx)); } catch {}
+    try {
+      const rounded = Math.round(uiPointSizePx * 100) / 100;
+      window.localStorage.setItem('uiPointSizePx', String(rounded));
+    } catch {}
   }, [uiPointSizePx]);
   // Iluminación fija, sin modificador (ahora controlada desde el sistema con un valor por defecto)
   // Parámetros de rendimiento fijos (mantenidos en SolarSystem): 60 Hz, tamaño 2.0
@@ -223,7 +232,21 @@ export default function EyesOnAsteroids() {
           onTimeUpdate={(jd, date) => { setDisplayDate(date); setDisplayJD(jd); }}
           direction={direction}
           onAsteroidHover={(neo) => setHoveredAsteroid(neo || null)}
-          onAsteroidClick={(neo) => setSelectedAsteroid(curr => (curr && String(curr.id) === String(neo.id) ? null : neo))}
+          onAsteroidClick={(neo) => {
+            setSelectedAsteroid(curr => {
+              const isSame = curr && String(curr.id) === String(neo.id);
+              if (isSame) {
+                // Deselect: clear search to show all
+                setSearchSelectedId(null);
+                if (!showAsteroids) setShowAsteroids(true);
+                return null;
+              }
+              // Select new: filter to this one
+              setSearchSelectedId(String(neo.id));
+              if (!showAsteroids) setShowAsteroids(true);
+              return neo;
+            });
+          }}
           selectedNeoId={selectedAsteroid?.id}
         />
       )}
@@ -272,7 +295,16 @@ export default function EyesOnAsteroids() {
   </button>
       </div>
 
-      <InfoPanel visible={infoOpen} onClose={() => setInfoOpen(false)} />
+      <InfoPanel
+        visible={infoOpen}
+        onClose={() => {
+          // Close info panel and clear any asteroid selection/search to show all asteroids
+          setInfoOpen(false);
+          setSelectedAsteroid(null);
+          setSearchSelectedId(null);
+          if (!showAsteroids) setShowAsteroids(true);
+        }}
+      />
 
       {/* Contenedor compacto con 3 columnas: izquierda, centro, derecha */}
       <div className={`time-controls time-controls--compact ${showTimeControls ? 'is-visible' : 'is-hidden'}`}>
