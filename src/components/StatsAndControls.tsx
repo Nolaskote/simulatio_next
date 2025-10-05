@@ -52,11 +52,12 @@ export default function StatsAndControls({
           <input
             id="size-slider"
             type="range"
-            min={2}
-            max={8}
+            min={1}
+            max={10}
             step={1}
             value={pointSizePx}
             onChange={(e) => setPointSizePx(parseInt(e.target.value, 10))}
+            className="size-slider"
             style={{ width: '100%' }}
             aria-label="Asteroid size in pixels"
           />

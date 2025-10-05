@@ -92,8 +92,17 @@ export default function EyesOnAsteroids() {
   const [hoveredAsteroid, setHoveredAsteroid] = useState<NEOData | null>(null);
   // Toggle de brillo/halo alrededor (planetas y asteroides)
   const [haloEnabled, setHaloEnabled] = useState(false);
-  // UI-controlled asteroid size in pixels (2..8), default 3px
-  const [uiPointSizePx, setUiPointSizePx] = useState<number>(3);
+  // UI-controlled asteroid size in pixels (1..10), default 3px; persisted
+  const [uiPointSizePx, setUiPointSizePx] = useState<number>(() => {
+    try {
+      const raw = typeof window !== 'undefined' ? window.localStorage.getItem('uiPointSizePx') : null;
+      const n = raw ? parseInt(raw, 10) : 3;
+      return Number.isFinite(n) ? Math.min(10, Math.max(1, n)) : 3;
+    } catch { return 3; }
+  });
+  useEffect(() => {
+    try { window.localStorage.setItem('uiPointSizePx', String(uiPointSizePx)); } catch {}
+  }, [uiPointSizePx]);
   // Iluminación fija, sin modificador (ahora controlada desde el sistema con un valor por defecto)
   // Parámetros de rendimiento fijos (mantenidos en SolarSystem): 60 Hz, tamaño 2.0
   const now = useMemo(() => new Date(), []);
