@@ -25,21 +25,40 @@ const useNEOSData = () => {
     try {
       setError(null);
       setLoading(true);
-      // Try non-JSON extension first on Pages to bypass LFS rules there; fallback to .json for local/dev
-      let text: string;
-      try {
-        const resJSN = await fetch(asset('data/neos.jsn'), { cache: 'no-cache' });
-        if (!resJSN.ok) throw new Error('neos.jsn not found');
-        text = await resJSN.text();
-      } catch {
-        const resJSON = await fetch(asset('data/neos.json'), { cache: 'no-cache' });
-        if (!resJSON.ok) throw new Error('Failed to load NEO data');
-        text = await resJSON.text();
+      // Prefer .jsn on Pages, but in dev .jsn does not exist; be resilient to HTML fallback and LFS pointers.
+      const fetchText = async (url: string) => {
+        const res = await fetch(url, { cache: 'no-cache' });
+        const ct = res.headers?.get('content-type') || '';
+        const body = await res.text();
+        return { ok: res.ok, ct, body };
+      };
+
+  // Always use asset() so BASE_URL is respected in both dev and build.
+  const urlJSN = asset('data/neos.jsn');
+  const urlJSON = asset('data/neos.json');
+
+      let text: string | null = null;
+      // 1) Try .jsn first
+      const jsn = await fetchText(urlJSN);
+      if (jsn.ok) {
+        const looksHTML = /^\s*</.test(jsn.body) || jsn.ct.includes('text/html');
+        const looksLFSPointer = /^\s*version https:\/\/git-lfs.github.com\/spec\/v1/m.test(jsn.body);
+        const looksJSON = !looksHTML && !looksLFSPointer && /[\[{]/.test(jsn.body.trim().charAt(0));
+        if (looksJSON) {
+          text = jsn.body;
+        }
       }
-      // Parse manually to detect/throw if it's an LFS pointer
-      if (/^\s*version https:\/\/git-lfs.github.com\/spec\/v1/m.test(text)) {
-        throw new Error('NEO dataset is a Git LFS pointer on Pages. Redeploy needed.');
+      // 2) Fallback to .json if .jsn missing or not JSON
+      if (!text) {
+        const json = await fetchText(urlJSON);
+        if (!json.ok) throw new Error('Failed to load NEO data');
+        const looksHTML = /^\s*</.test(json.body) || json.ct.includes('text/html');
+        const looksLFSPointer = /^\s*version https:\/\/git-lfs.github.com\/spec\/v1/m.test(json.body);
+        if (looksHTML) throw new Error('NEO dataset served as HTML. Check dev base or path.');
+        if (looksLFSPointer) throw new Error('NEO dataset is a Git LFS pointer on Pages. Redeploy needed.');
+        text = json.body;
       }
+
       const data = JSON.parse(text);
       setNeos(data);
     } catch (err) {
