@@ -1,0 +1,6 @@
+# Pinned ML deps for Python 3.9 on Windows (CPU)
+# Avoid standalone 'keras' to prevent conflicts; use tf.keras from TensorFlow 2.15.x
+numpy==1.26.4
+pandas==2.0.3
+scikit-learn==1.3.2
+tensorflow==2.15.1

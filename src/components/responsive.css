@@ -1,0 +1,172 @@
+/* Responsive styles for EyesOnAsteroids overlays and controls */
+/* Base rules come from EyesOnAsteroids.css. These media queries only adjust sizing and spacing. */
+
+/* 1) Laptop L - 1440px (and downwards just below 1440) */
+@media (max-width: 1440px) {
+  .time-controls { padding: 10px 12px; }
+  .tc-badge { font-size: 14px; }
+  .tc-grid { gap: 10px 16px; }
+  .tc-col .btn, .tc-col .panel-close { width: 130px; }
+  .panel { max-width: 320px; }
+}
+
+/* 2) Laptop - 1024px */
+@media (max-width: 1024px) {
+  .time-controls { padding: 9px 10px; }
+  .tc-badge { font-size: 13px; padding: 6px 10px; }
+  .tc-grid { gap: 8px 12px; }
+  .tc-col { gap: 6px; }
+  .tc-col .btn, .tc-col .panel-close { width: 120px; padding: 6px 10px; }
+  .panel { max-width: 300px; }
+}
+
+/* 3) Tablet - 768px */
+@media (max-width: 768px) {
+  .time-controls.time-controls--compact { min-width: auto; bottom: 49px; }
+  .tc-row { gap: 4px; }
+  .tc-grid { grid-template-columns: 1fr 1fr 1fr; gap: 8px 10px; }
+  .tc-col .btn, .tc-col .panel-close { width: 100%; }
+  .top-right-controls { top: 10px; right: 10px; gap: 6px; }
+  .panel.panel--left { top: 94px; left: 10px; right: 10px; max-width: none; }
+  .speed-label, .dir-label { font-size: 12px; }
+
+@media (max-width: 480px) {
+  .time-controls.time-controls--compact { bottom: 65px; }
+  .neo-search { min-width: 58vw; }
+  .neo-search.neo-search--compact { min-width: 54vw; }
+  .top-right-controls { top: 8px; right: 8px; }
+  .panel.panel--left { top: 94px; left: 8px; right: 8px; }
+}
+  .panel { left: 16px; right: 16px; max-width: calc(100% - 32px); }
+
+  /* Panel Estadísticas/Controles en dos columnas (izq: estadísticas, der: controles) */
+  .panel.panel--left {
+    left: 0; right: 0; margin: 0 auto;
+    width: calc(100% - 28px);
+    max-width: 680px; /* más compacto en tablet */
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr; /* 3 columnas: stats | controles | indicaciones */
+    column-gap: 12px; row-gap: 6px;
+    padding: 12px; border-radius: 8px; font-size: 13px;
+  }
+  .panel.panel--left .panel-close { grid-column: 1 / -1; justify-self: start; }
+  /* Secciones posicionadas en columnas */
+  .panel.panel--left .section--stats { grid-column: 1; }
+  .panel.panel--left .section--controls { grid-column: 2; }
+  .panel.panel--left .section--legend { grid-column: 3; }
+  .panel.panel--left .title { margin: 0 0 6px 0; font-size: 16px; }
+  .panel.panel--left .grid { gap: 6px; }
+  .panel.panel--left .check { gap: 6px; }
+  .panel.panel--left .legend { font-size: 12px; }
+  /* No necesitamos el separator intermedio escondido, ahora se usa al final de cada sección */
+}
+
+/* 4) Mobile L - 425px */
+@media (max-width: 425px) {
+  .time-controls { padding: 8px; border-radius: 10px; }
+  .tc-badge { font-size: 12px; padding: 6px 8px; }
+  .tc-grid { grid-template-columns: 1fr 1fr 1fr; gap: 6px 8px; }
+  .tc-col { gap: 4px; }
+  .tc-col .btn, .tc-col .panel-close { width: 100%; padding: 6px 8px; font-size: 12px; }
+  .time-controls .speed-label, .time-controls .dir-label { font-size: 11px; }
+  .panel { padding: 10px; font-size: 12.5px; }
+  .reveal-btn { font-size: 12px; padding: 6px 8px; }
+
+  /* 2-col panel más angosto y centrado */
+  .panel.panel--left { 
+    max-width: 400px; width: calc(100% - 20px); 
+    column-gap: 10px; row-gap: 6px; padding: 10px; border-radius: 8px; font-size: 12.5px;
+    grid-template-columns: 1fr 1fr 1fr; 
+  }
+  .panel.panel--left .section--stats { grid-column: 1; }
+  .panel.panel--left .section--controls { grid-column: 2; }
+  .panel.panel--left .section--legend { grid-column: 3; }
+  .panel.panel--left .title { margin: 0 0 6px 0; font-size: 14px; }
+}
+
+/* 5) Mobile M - 375px */
+@media (max-width: 375px) {
+  .time-controls { padding: 8px; }
+  .tc-badge { font-size: 12px; }
+  .tc-grid { gap: 6px 8px; }
+  .tc-col .btn, .tc-col .panel-close { font-size: 12px; padding: 6px 8px; }
+  .panel { padding: 10px; font-size: 12px; }
+
+  .panel.panel--left { 
+    max-width: 360px; width: calc(100% - 18px); 
+    column-gap: 8px; row-gap: 6px; padding: 10px; border-radius: 8px; font-size: 12px; 
+    grid-template-columns: 1fr 1fr 1fr; 
+  }
+  .panel.panel--left .section--stats { grid-column: 1; }
+  .panel.panel--left .section--controls { grid-column: 2; }
+  .panel.panel--left .section--legend { grid-column: 3; }
+  .panel.panel--left .title { margin: 0 0 6px 0; font-size: 13.5px; }
+}
+
+/* 6) Mobile S - 320px */
+@media (max-width: 320px) {
+  .time-controls { padding: 6px; }
+  .tc-badge { font-size: 11px; padding: 5px 6px; }
+  .tc-grid { gap: 6px; }
+  .tc-col { gap: 4px; }
+  .tc-col .btn, .tc-col .panel-close { font-size: 11px; padding: 5px 6px; }
+  .time-controls .speed-label, .time-controls .dir-label { font-size: 10.5px; }
+  .panel { padding: 8px; font-size: 11.5px; }
+  .reveal-btn { font-size: 11px; padding: 5px 6px; }
+
+  /* Mobile S adjustments */
+  .time-controls.time-controls--compact { bottom: 40px; }
+  .reveal-btn--left { top: 56px; }
+  .reveal-btn--bottom { bottom: 42px; }
+
+  .panel.panel--left { 
+    max-width: 320px; width: calc(100% - 16px); 
+    column-gap: 6px; row-gap: 6px; padding: 8px; border-radius: 8px; font-size: 11.5px; 
+    grid-template-columns: 1fr 1fr 1fr; 
+    top: 78px; /* closer to the search without touching it */
+  }
+
+/* Landscape tweaks: shrink panels to avoid collisions on short heights */
+@media (max-width: 768px) and (orientation: landscape) {
+  .panel.panel--left { 
+    max-width: 620px; padding: 8px; font-size: 12px; column-gap: 8px; row-gap: 4px; 
+    top: 6px; max-height: calc(100vh - 170px); overflow-y: auto; 
+  }
+  .panel.panel--left .title { font-size: 14px; margin-bottom: 4px; }
+  .panel.panel--left .stat-line { margin: 2px 0; line-height: 1.2; }
+  .panel.panel--left .grid { gap: 4px; }
+  .panel.panel--left .check { gap: 6px; }
+  .panel.panel--left .legend { font-size: 11px; line-height: 1.2; }
+  .time-controls { transform: translateX(-50%) scale(0.82); transform-origin: center bottom; bottom: 10px; }
+  .tc-badge { font-size: 12px; }
+  .tc-col .btn, .tc-col .panel-close { font-size: 12px; padding: 6px 8px; }
+}
+
+@media (max-width: 425px) and (orientation: landscape) {
+  .panel.panel--left { max-width: 360px; padding: 8px; font-size: 11.5px; column-gap: 8px; top: 6px; max-height: calc(100vh - 140px); overflow-y: auto; }
+  .panel.panel--left .title { font-size: 14px; }
+  .panel.panel--left .legend { font-size: 11px; }
+  .time-controls { transform: translateX(-50%) scale(0.8); bottom: 10px; }
+}
+
+@media (max-width: 375px) and (orientation: landscape) {
+  .panel.panel--left { max-width: 320px; padding: 8px; font-size: 11.5px; top: 6px; max-height: calc(100vh - 140px); overflow-y: auto; grid-template-columns: 1fr 1fr; }
+  .panel.panel--left .title { font-size: 13px; }
+  .panel.panel--left .section--stats { grid-column: 1; }
+  .panel.panel--left .section--controls { grid-column: 2; }
+  .panel.panel--left .section--legend { grid-column: 1 / -1; }
+  .time-controls { transform: translateX(-50%) scale(0.78); bottom: 8px; }
+}
+
+@media (max-width: 320px) and (orientation: landscape) {
+  .panel.panel--left { max-width: 300px; padding: 6px; font-size: 11px; column-gap: 6px; row-gap: 6px; top: 4px; max-height: calc(100vh - 150px); overflow-y: auto; grid-template-columns: 1fr 1fr; }
+  .panel.panel--left .title { font-size: 12.5px; }
+  .panel.panel--left .section--stats { grid-column: 1; }
+  .panel.panel--left .section--controls { grid-column: 2; }
+  .panel.panel--left .section--legend { grid-column: 1 / -1; }
+  .time-controls { transform: translateX(-50%) scale(0.76); bottom: 6px; }
+}
+  .panel.panel--left .section--stats { grid-column: 1; }
+  .panel.panel--left .section--controls { grid-column: 2; }
+  .panel.panel--left .section--legend { grid-column: 3; }
+}
