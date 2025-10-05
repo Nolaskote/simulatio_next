@@ -55,7 +55,7 @@ export default function LoadingScreen({ minDurationMs = 5000, ready, onComplete,
       <div className="loader-content">
         <div className="loader-ring" style={{ ['--p' as any]: `${pct}` }}>
           <div className="loader-logo">
-            <img src={asset('textures/neoscience.jpeg')} alt="NeoScience" />
+            <img src={asset('textures/android-chrome-192x192.png')} alt="NASA Hackathon" />
           </div>
         </div>
         <div className="loader-percent">{pct}%</div>
