@@ -25,11 +25,22 @@ const useNEOSData = () => {
     try {
       setError(null);
       setLoading(true);
-  const response = await fetch(asset('data/neos.json'), { cache: 'no-cache' });
-      if (!response.ok) {
-        throw new Error('Failed to load NEO data');
+      // Try non-JSON extension first on Pages to bypass LFS rules there; fallback to .json for local/dev
+      let text: string;
+      try {
+        const resJSN = await fetch(asset('data/neos.jsn'), { cache: 'no-cache' });
+        if (!resJSN.ok) throw new Error('neos.jsn not found');
+        text = await resJSN.text();
+      } catch {
+        const resJSON = await fetch(asset('data/neos.json'), { cache: 'no-cache' });
+        if (!resJSON.ok) throw new Error('Failed to load NEO data');
+        text = await resJSON.text();
       }
-      const data = await response.json();
+      // Parse manually to detect/throw if it's an LFS pointer
+      if (/^\s*version https:\/\/git-lfs.github.com\/spec\/v1/m.test(text)) {
+        throw new Error('NEO dataset is a Git LFS pointer on Pages. Redeploy needed.');
+      }
+      const data = JSON.parse(text);
       setNeos(data);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Unknown error');

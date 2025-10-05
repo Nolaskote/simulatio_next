@@ -10,6 +10,11 @@ const dist = resolve(__dirname, '..', 'dist');
 
 try {
   await copyFile(resolve(dist, 'index.html'), resolve(dist, '404.html'));
+  // Duplicate neos.json to neos.jsn to avoid Git LFS JSON rules on gh-pages
+  try {
+    const dataDir = resolve(dist, 'data');
+    await copyFile(resolve(dataDir, 'neos.json'), resolve(dataDir, 'neos.jsn'));
+  } catch {}
   // Copy TFJS WASM assets from public/tfwasm and if missing, from node_modules
   const tfSrc = resolve(__dirname, '..', 'public', 'tfwasm');
   const tfDst = resolve(dist, 'tfwasm');
