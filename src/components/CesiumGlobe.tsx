@@ -17,8 +17,9 @@ export default function CesiumGlobe({ markerLat, markerLon, onPick }: Props) {
     ;(async () => {
       try {
     if (viewerRef.current) return
-    // Ensure Cesium knows where to load its static assets before import side-effects
-    ;(window as any).CESIUM_BASE_URL = ((import.meta as any).env?.BASE_URL || '/') + 'Cesium/'
+  // Ensure Cesium knows where to load its static assets before import side-effects
+  // vite-plugin-cesium serves assets from 'cesium/' (lowercase)
+  ;(window as any).CESIUM_BASE_URL = (((import.meta as any).env?.BASE_URL) || '/') + 'cesium/'
   const Cesium = await import('cesium')
     cesiumRef.current = Cesium
 
